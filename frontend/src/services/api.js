@@ -1,11 +1,14 @@
 import axios from 'axios';
 
-// API base URLs for each microservice
+// Dynamically grab the current host (detects localhost, your EC2 Public IP, or custom domain)
+const host = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+
+// API base URLs for each microservice with dynamic host fallback
 const API_GATEWAYS = {
-  user: process.env.REACT_APP_USER_SERVICE_URL || 'http://localhost:3001',
-  product: process.env.REACT_APP_PRODUCT_SERVICE_URL || 'http://localhost:3002',
-  cart: process.env.REACT_APP_CART_SERVICE_URL || 'http://localhost:3003',
-  order: process.env.REACT_APP_ORDER_SERVICE_URL || 'http://localhost:3004',
+  user: process.env.REACT_APP_USER_SERVICE_URL || `http://${host}:3001`,
+  product: process.env.REACT_APP_PRODUCT_SERVICE_URL || `http://${host}:3002`,
+  cart: process.env.REACT_APP_CART_SERVICE_URL || `http://${host}:3003`,
+  order: process.env.REACT_APP_ORDER_SERVICE_URL || `http://${host}:3004`,
 };
 
 // Create axios instances for each service

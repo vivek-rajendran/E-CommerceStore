@@ -77,33 +77,36 @@ const Checkout = () => {
     setError('');
 
     try {
-      // Create order
       const orderData = {
+        orderNumber: `ORD-${Date.now()}`,
         userId: user._id,
         shippingAddress: formData.shippingAddress,
         billingAddress: formData.sameAsBilling ? formData.shippingAddress : formData.billingAddress,
         paymentMethod: formData.paymentMethod,
         shippingMethod: formData.shippingMethod,
-        customerNotes: formData.customerNotes
+        customerNotes: formData.customerNotes,
+        items: cart.items.map(item => ({
+          product: item.productId,
+          quantity: item.quantity,
+          price: item.price,
+          total: item.price * item.quantity
+        })),
+        totalAmount: calculateTotal()
       };
 
       const orderResponse = await orderService.createOrder(orderData);
       const order = orderResponse.data.order;
 
-      // Process payment
       const paymentData = {
         orderId: order._id,
         paymentMethod: formData.paymentMethod,
         paymentDetails: {
-          // In a real app, this would come from a payment form
           cardNumber: '**** **** **** 1234',
           expiryDate: '12/25'
         }
       };
 
       await orderService.processPayment(paymentData);
-
-      // Clear cart and redirect
       await clearCart();
       navigate(`/orders?success=true&orderId=${order._id}`);
 
@@ -140,12 +143,7 @@ const Checkout = () => {
           {/* Checkout Form */}
           <div>
             {/* Shipping Address */}
-            <div style={{ 
-              backgroundColor: 'white', 
-              padding: '2rem', 
-              borderRadius: '10px',
-              marginBottom: '2rem'
-            }}>
+            <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '10px', marginBottom: '2rem' }}>
               <h2 style={{ marginBottom: '1.5rem' }}>Shipping Address</h2>
               
               <div className="grid grid-2" style={{ gap: '1rem' }}>
@@ -238,12 +236,7 @@ const Checkout = () => {
             </div>
 
             {/* Billing Address */}
-            <div style={{ 
-              backgroundColor: 'white', 
-              padding: '2rem', 
-              borderRadius: '10px',
-              marginBottom: '2rem'
-            }}>
+            <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '10px', marginBottom: '2rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                 <h2>Billing Address</h2>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -350,12 +343,7 @@ const Checkout = () => {
             </div>
 
             {/* Payment & Shipping */}
-            <div style={{ 
-              backgroundColor: 'white', 
-              padding: '2rem', 
-              borderRadius: '10px',
-              marginBottom: '2rem'
-            }}>
+            <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '10px', marginBottom: '2rem' }}>
               <h2 style={{ marginBottom: '1.5rem' }}>Payment & Shipping</h2>
               
               <div className="grid grid-2" style={{ gap: '1rem' }}>
@@ -404,25 +392,12 @@ const Checkout = () => {
 
           {/* Order Summary */}
           <div>
-            <div style={{ 
-              backgroundColor: 'white', 
-              padding: '2rem', 
-              borderRadius: '10px',
-              position: 'sticky',
-              top: '2rem'
-            }}>
+            <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '10px', position: 'sticky', top: '2rem' }}>
               <h2 style={{ marginBottom: '1.5rem' }}>Order Summary</h2>
               
-              {/* Order Items */}
               <div style={{ marginBottom: '1.5rem', maxHeight: '300px', overflowY: 'auto' }}>
                 {cart.items.map(item => (
-                  <div key={item.productId} style={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '0.5rem 0',
-                    borderBottom: '1px solid #e9ecef'
-                  }}>
+                  <div key={item.productId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: '1px solid #e9ecef' }}>
                     <div>
                       <div style={{ fontWeight: 'bold' }}>{item.productDetails.name}</div>
                       <div style={{ color: '#6c757d', fontSize: '0.9rem' }}>
@@ -436,7 +411,6 @@ const Checkout = () => {
                 ))}
               </div>
 
-              {/* Pricing Breakdown */}
               <div style={{ borderTop: '1px solid #e9ecef', paddingTop: '1rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                   <span>Subtotal</span>
@@ -453,14 +427,7 @@ const Checkout = () => {
                   <span>{formatPrice(cart.totalPrice * 0.08)}</span>
                 </div>
                 
-                <div style={{ 
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  fontSize: '1.2rem', 
-                  fontWeight: 'bold',
-                  borderTop: '1px solid #e9ecef',
-                  paddingTop: '1rem'
-                }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.2rem', fontWeight: 'bold', borderTop: '1px solid #e9ecef', paddingTop: '1rem' }}>
                   <span>Total</span>
                   <span>{formatPrice(calculateTotal())}</span>
                 </div>

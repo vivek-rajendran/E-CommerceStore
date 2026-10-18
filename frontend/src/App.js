@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import { useAuth } from './contexts/AuthContext';
+import OrderDetail from './pages/OrderDetail';
 
 function App() {
   const { user } = useAuth();
@@ -29,6 +30,7 @@ function App() {
             <>
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/orders" element={<Orders />} />
+              <Route path="/orders/:id" element={<OrderDetail />} />
               <Route path="/profile" element={<Profile />} />
             </>
           ) : (
@@ -37,6 +39,7 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/checkout" element={<Login />} />
               <Route path="/orders" element={<Login />} />
+              <Route path="/orders/:id" element={<OrderDetail />} />
               <Route path="/profile" element={<Login />} />
             </>
           )}

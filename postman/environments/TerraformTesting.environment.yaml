@@ -1,0 +1,4 @@
+name: TerraformTesting
+values:
+  - key: TERRAFORM_TESTING_IP
+    value: ''

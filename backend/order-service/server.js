@@ -27,6 +27,11 @@ app.get('/health', (req, res) => {
   res.json({ service: 'Order Service', status: 'OK', port: PORT });
 });
 
+// /orders API endpoint
+app.get('/orders', (req, res) => {
+    res.send('Order Service Running');
+});
+
 app.listen(PORT, () => {
   console.log(`Order Service running on port ${PORT}`);
 });

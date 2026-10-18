@@ -1,0 +1,39 @@
+$kind: http-request
+name: http://13.235.114.117:3002/api/products
+description: "Generated from cURL: curl --location 'http://13.235.114.117:3002/api/products' \\\r
+
+  --header 'Content-Type: application/json' \\\r
+
+  --data '{\r
+
+  \    \"name\": \"Wireless Mechanical Keyboard\",\r
+
+  \    \"description\": \"RGB backlit wireless gaming keyboard\",\r
+
+  \    \"price\": 79.99,\r
+
+  \    \"category\": \"Electronics\",\r
+
+  \    \"stock\": 50\r
+
+  }'"
+url: http://13.235.114.117:3002/api/products
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"Wireless Mechanical Keyboard\",\r
+
+    \    \"description\": \"RGB backlit wireless gaming keyboard\",\r
+
+    \    \"price\": 79.99,\r
+
+    \    \"category\": \"Electronics\",\r
+
+    \    \"stock\": 50\r
+
+    }"
+order: 2000
