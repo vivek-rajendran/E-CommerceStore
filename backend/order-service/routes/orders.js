@@ -127,13 +127,18 @@ router.post('/', async (req, res) => {
     const shipping = calculateShipping(shippingMethod, cart.totalPrice);
     const tax = calculateTax(cart.totalPrice, shippingAddress.state);
 
+    // Generate a unique order number
+    const orderNumber = `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
     // Create order
     const order = new Order({
+      orderNumber,
       userId,
       items: cart.items.map(item => ({
         productId: item.productId,
         quantity: item.quantity,
         price: item.price,
+        total: item.price * item.quantity,
         productDetails: item.productDetails
       })),
       pricing: {

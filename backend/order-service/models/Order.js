@@ -42,7 +42,8 @@ const OrderSchema = new mongoose.Schema({
   orderNumber: {
     type: String,
     unique: true,
-    required: true
+    required: true,
+    default: () => `ORD-${Date.now()}`
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -54,7 +55,13 @@ const OrderSchema = new mongoose.Schema({
     tax: { type: Number, default: 0 },
     shipping: { type: Number, default: 0 },
     discount: { type: Number, default: 0 },
-    total: { type: Number, required: true }
+    total: {
+      type: Number, 
+      required: true,
+      default: function() {
+        return this.price * this.quantity;
+      }
+    }
   },
   shippingAddress: ShippingAddressSchema,
   billingAddress: ShippingAddressSchema,
